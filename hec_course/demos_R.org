@@ -1,0 +1,480 @@
+#+TITLE: Demos R
+
+* Session 1
+#+begin_src R :results output graphics file :file (org-babel-temp-file ".figure" ".png") :exports both :width 600 :height 400 :session *R*
+0<0.5<1
+
+#my first calculation
+1+1 ; 1+2
+
+######
+a<-1
+
+a=1  # different from a==1
+
+1->a
+
+1:1000
+
+
+a=1:10
+a[2]=NA
+a
+mean(a)
+mean(a[-2])
+
+aclean=a[!is.na(a)]
+mean(aclean)
+
+!TRUE
+
+
+###########
+
+gender=c(1,2,1,1,2)
+gender=factor(gender)
+attributes(gender)
+levels(gender)=c("F","M")
+
+levels(gender)
+gender
+
+test=c("a","1","a")
+levels(factor(test))
+
+
+#### a list
+
+year=2020
+rooms=c("T010","T012","T010")
+students=cbind(names=c("Pierre","Paul","Jacques"), 
+               major=c("Econ","Fin","HR"))
+
+course=list(Year=year,rooms=rooms,students=students)
+
+length(course)
+
+course$year
+course$students
+
+attributes(course)
+
+#########
+######### loading a csv dataset
+
+getwd()
+setwd("/home/user-ek01/Rcourse/data")
+
+list.files()
+length(list.files())
+
+data=read.table("cps08.csv",header=T,sep=";", dec=",")
+
+# cheking that the dimensions and values are correctly coded
+dim(data)
+names(data)
+data[1,1]
+
+summary(data)
+
+summary(data)
+
+####### computing the mean ahe for males and females
+
+mean(data[,1])
+
+# in two steps, creating temporary data frame (one for males only, the other for females only)
+data_females=data[data[,4]==1,]
+data_males=data[data[,4]==0,]
+mean(data_females[,1])
+mean(data_males[,1])
+
+
+# the following approaches are equivalent
+
+# refering to columns by their number
+mean(data[data[,4]==1,1])
+mean(data[data[,4]==0,1])
+
+# refering to columns by their names
+
+mean(data[data[,"female"]==1,"ahe"])
+mean(data[data[,"female"]==0,"ahe"])
+
+# treating the data.frame as a list whose elements (the variables) are accessed with the $ operator
+mean(data[data$female==1,]$ahe)
+mean(data[data$female==0,]$ahe)
+#+end_src
+
+* Session 2
+#+begin_src R :results output graphics file :file (org-babel-temp-file ".figure" ".png") :exports both :width 600 :height 400 :session *R*
+setwd("/home/user-ek01/Rcourse/data")
+
+data=read.table("titanic.csv", header=T, sep=";")
+
+dim(data)
+names(data)
+summary(data)
+####
+
+#### crerate a dataframe data1 that contains passengers from 1st class
+data1=data[data$PClass=="1st",]
+dim(data1)
+
+#### crerate a dataframe data1 that contains females from 1st class
+data2=data[data$PClass=="1st" & data$Sex=="female",]
+dim(data2)
+
+data2=subset(data, PClass=="1st" & Sex=="female")
+
+
+# global survival rate 
+mean(data$Survived..1.yes.)
+
+mean(data[,]$Survived..1.yes.)
+
+
+# exercise, compute the survival rate for each class, each gender, and compare SR 
+# of women in 3rd class to men in 1st class. 
+
+mean(data[data$PClass=="1st" & data$Sex=="male",]$Survived..1.yes.)
+mean(data[data$PClass=="3rd" & data$Sex=="female",]$Survived..1.yes.)
+
+mean(data[data$PClass=="1st" ,]$Survived..1.yes.)
+mean(data[data$PClass=="2nd" ,]$Survived..1.yes.)
+mean(data[data$PClass=="3rd" ,]$Survived..1.yes.)
+
+#### average age of passengers in 1st class
+mean(data[data$PClass=="1st" ,]$Age)
+
+mean(data[data$PClass=="1st" & !is.na(data$Age),]$Age)
+mean(data[data$PClass=="1st",]$Age,na.rm=T)
+
+######## changing the names of the data set 
+
+names(data)[5]="survived"
+
+summary(data)
+
+#####
+
+data_withAgeNA=data[!is.na(data$Age),]
+data_clean=subset(data,!is.na(data$Age))
+
+#####
+
+mean(data$Age)
+
+with(data, mean(Age,na.rm=T))
+
+
+#####
+
+load("titanic_incomplete1.rda"); load("titanic_incomplete2.rda")
+dim(titanic_incomplete1)
+names(titanic_incomplete1)
+
+dim(titanic_incomplete2)
+names(titanic_incomplete2)
+
+
+####### t.test on Age
+
+data_clean=subset(data,!is.na(data$Age))
+summary(data_clean)
+
+t.test(data_clean$Age,mu=40)
+
+mytest=t.test(data_clean$Age,mu=40)
+
+names(mytest)
+
+mytest$p.value
+mytest$alternative
+
+help(t.test)
+
+
+######
+
+setwd("/home/user-ek01/Rcourse/data")
+data=read.table("profsalary.txt", header=T)
+
+apply(data,2,mean)
+
+apply(data,1,mean)
+
+
+##### using aggregate to compute survival rate for each type of pessenger on Titnanic 
+
+data=read.table("titanic.csv", header=T, sep=";")
+
+aggregate(Survived..1.yes.~PClass+Sex    ,data,mean)
+
+aggregate(Age~PClass+Sex    ,data,median)
+
+aggregate(Age~PClass+Sex    ,data,length)
+
+aggregate(Age~PClass+Sex    ,data,t.test)
+
+#### 
+aggregate(Age~PClass+Sex    ,data,summary)
+
+aggregate(Age~PClass+Sex    ,data,function(x)c("m"=mean(x),"s"=sd(x),"p"=t.test(x)$p.value))
+
+########
+######## some plots 
+
+x=rnorm(100,sd=10)
+x
+plot(x)
+
+
+##### some plots 
+par(mfrow=c(1,3),bg="lightyellow", col="red", pch=3) 
+plot(rnorm(100))
+plot(rnorm(100)) 
+plot(rnorm(100))
+
+plot(rnorm(100))
+
+#####
+##### sendingyour graph to a pdf
+
+pdf("myfirstexportedgraph.pdf")
+plot(rnorm(100))
+dev.off()
+
+##### installing and loading pacakges 
+
+library(ggplot2)
+
+help(ggplot2)
+
+
+#+end_src
+
+* Session 3
+#+begin_src R :results output graphics file :file (org-babel-temp-file ".figure" ".png") :exports both :width 600 :height 400 :session *R*
+# functions 
+
+x=1
+
+test=function(){print(x)}
+test2=function(x){print(x)}
+
+test()
+test2(3)
+
+
+#####
+##### enriching the lm summary function
+
+setwd("~/data")
+data=read.table("Advertising.csv",header=T,sep=",")
+modTV=lm(sales~TV,data=data)
+summary(modTV)
+
+
+mod=modTV
+
+robsummary=function(mod){
+  library(sandwich)
+  vcov =vcovHC(mod, "HC1")
+  se=sqrt(diag(vcov))
+  result=summary(mod)
+  result$coefficients=cbind(mod$coefficient,
+                            se,
+                            mod$coefficient-1.96*se,
+                            mod$coefficient+1.96*se)
+  colnames(result$coefficients)=c("coefficients",
+                                  "rob_se",
+                                  "rob95CI_inf",
+                                  "rob95CI_sup")
+return(result) }
+
+
+test=robsummary(modTV)
+
+names(test)
+
+test$coefficients
+
+###### function with contrls
+
+sqrt(-1)
+
+robsqrt=function(x){
+  if(x<0){print("You cannot apply sqrt to negative values !")
+    }else{return(sqrt(x))}
+}
+
+robsqrt(4)
+robsqrt(-4)
+
+
+test1=function(x){print(x^2)}
+test2=function(x){return(x^2)}
+
+test3=function(x,y){print(x); return(y)}
+
+result=test3(10,20)
+result
+
+##### write a recursive function that computes !n=n*(n-1)*...*(n-2)*...*1
+
+# logic / algorithm
+# we want to apply the fun to n, 
+# we suppose the exists for n-1 
+# n*fun(n-1) 
+# if n=1, fun(1)=1
+
+# let's turn this algorithm into a function
+fact=function(n){
+  if(n<=0){print("Don't do this !")}else{
+            if(n==1){return(1)}else{return(n*fact(n-1))}
+  }
+}
+fact(1)
+fact(10)
+
+fact(-10)
+
+
+#####
+#####
+
+for(value in 1:5){print(value)}
+   
+for(i in 1:5) {print("the current value is ");print(i)}
+
+#### using a loop for computing the sum of the values of a vector x 
+
+# at the beginning the sum is 0 
+# I will scan each value of x, 
+# for each value of x, I will add this value of the sum
+
+# let's turn this algo into an R procedure
+x=rnorm(100)
+sum=0
+for (i in x){sum=sum+i}
+sum
+# here, i is scaning the values of x
+
+# we could do the same scanning the indices of x
+sum=0
+for (i in 1:length(x)){sum=sum+x[i]}
+sum
+
+sum(x)
+
+
+
+####
+####
+
+data=read.table("cps08.csv",header=T, sep=";", dec=",")
+data$gender=factor(data$female, labels=c("M","F"))
+pdf("gender_gap_per_age_and_education.pdf")
+par(mfrow=c(1,2))
+for(i in 25:34){
+  for(j in 0:1){
+    boxplot(ahe~female, data=data, 
+         subset=c(age==i & bachelor==j),
+         main=paste("Gender gap for age ",i))}}
+dev.off()
+
+#+end_src
+
+#+begin_src R :results output graphics file :file (org-babel-temp-file ".figure" ".png") :exports both :width 600 :height 400 :session *R*
+setwd("~/data")
+
+data=read.table("Advertising.csv",header=T,sep=",")
+
+summary(data)
+
+plot(sales~TV,data,type="p",col="red",pch=19,cex=0.5, 
+     xlab="Expenses")
+points(sales~newspaper,data,type="p",col="grey",pch=19,cex=0.5)
+points(sales~radio,data,type="p",col="blue",pch=19,cex=0.5)
+title("Sales and advertising expenses")
+legend(150,8,col=c("red","blue","grey"),
+       legend=c("TV","Radio","Newspaper"),
+       lty=1,cex=0.7)
+
+#####
+plot(data[,c("sales","TV","radio", "newspaper")])
+
+
+
+###########
+########### plot with ggplot2
+library(ggplot2)
+
+ggplot(data,aes(y=sales))+
+  geom_point(aes(x=TV),col="red")+
+  geom_smooth(aes(x=TV),col="red", method="lm")+
+  geom_point(aes(x=newspaper),col="blue")+
+  geom_point(aes(x=radio),col="grey")
+
+
+##### regressions ######
+
+modTV=lm(sales~TV,data=data)
+names(modTV)
+
+modTV$coefficients
+summary(modTV)
+
+modRadio=lm(sales~radio,data)
+summary(modRadio)
+
+modnewspaper=lm(sales~newspaper,data)
+summary(modnewspaper)
+
+plot(modnewspaper)
+
+plot(data[,-1])
+cor(data[,-1])
+
+##### focusing on specific columns
+cor(data[,c("TV","radio","newspaper")])
+
+#####
+
+
+####
+#####
+
+mod=lm(sales~newspaper+TV+radio,data)
+summary(mod)
+
+
+summary(lm(newspaper~TV+radio,data))
+
+cor(data$newspaper,data$radio)
+
+
+###### diagnistic plots 
+
+plot(modTV)
+
+res=rstandard(modTV)
+hist(res)
+
+modTV_noout=lm(sales~TV,data=data, subset=c(abs(res)<2))
+summary(modTV_noout)
+
+##### log log transformation
+modTV_loglog=lm(log(sales)~log(TV),data=data)
+summary(modTV_loglog)
+
+plot(modTV_loglog)
+####
+
+modTV_sqrt=lm(sqrt(sales)~sqrt(TV),data=data)
+summary(modTV_sqrt)
+
+plot(modTV_sqrt)
+
+#+end_src

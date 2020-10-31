@@ -1,0 +1,5280 @@
+Statistical Programming with R
+Main Functions and Graphics for Exploratory analysis
+Emmanuel Kemel (HEC Paris, CNRS)
+
+Emmanuel Kemel (HEC Paris, CNRS)
+
+Statistical Programming with R
+
+1 / 75
+
+Notions seen in these slides
+
+Applying functions
+Making Graphics
+Analyzing variables and relations between variables
+
+Emmanuel Kemel (HEC Paris, CNRS)
+
+Statistical Programming with R
+
+2 / 75
+
+Outline
+1
+
+Applying funtions
+
+2
+
+Graphics
+Functions for graphics
+Customizing graphics
+
+3
+
+Exploratory statistical analysis
+Discrete variables
+Continuous distributions
+
+4
+
+Multivariate distributions
+Two categorical variables
+One categorical and one continuous variable
+Two continuous variables
+More than two variables
+
+Emmanuel Kemel (HEC Paris, CNRS)
+
+Statistical Programming with R
+
+3 / 75
+
+Function over a vector
+Most functions apply to vectors, and return
+a single value
+min(), max(), mean(),median(), sum(), prod(), sd(), var()
+a vector of values
+quantile(), table()
+a vector of the same size as the argument
+exp(), log(), sqrt(), abs(), cumsum()
+one index
+which.min(), which.max()
+one or several indexes
+which(condition)
+a vector of indexes that has the same size as the argument
+order()
+a lists that contains the results of the computation
+t.test(), lm()
+Emmanuel Kemel (HEC Paris, CNRS)
+
+Statistical Programming with R
+
+4 / 75
+
+Functions over two vectors
+Functions can take several two or more vectors as argument and return
+a single value
+cor(x,y), min(x,y)
+a vector
+pmin(x,y)
+a matrix
+out(x,y) returns a matrix m of size(length(x),length(y)) such that
+m[i, j] = x[i] ⇥ y [j]
+cov(x,y)
+a list that contains the results of the computation
+t.test(x,y)
+
+Emmanuel Kemel (HEC Paris, CNRS)
+
+Statistical Programming with R
+
+5 / 75
+
+Functions over a matrix
+
+Function apply() makes computations on the margins of a matrix.
+Its arguments are
+the matrix
+the dimension of the computation: 1 for lines, 2 for columns
+the function to be applied
+
+Note that applying a function to a matrix without function apply will,
+if possible return a calculation over all the values of the matrix.
+
+Emmanuel Kemel (HEC Paris, CNRS)
+
+Statistical Programming with R
+
+6 / 75
+
+Examples
+setwd("~/Dropbox/PhD_Econometrics/data")
+data=read.table("profsalary.txt", header=T)
+apply(data,2,mean)
+Case
+72.00000
+
+Salary Experience
+65.16783
+18.86014
+
+apply(data,2,median)
+Case
+72
+
+Salary Experience
+69
+18
+
+apply(data,2, quantile)
+Case Salary Experience
+0%
+1.0
+37.0
+1.0
+25%
+36.5
+60.5
+12.5
+50%
+72.0
+69.0
+18.0
+75% 107.5
+72.0
+26.0
+100% 143.0
+78.0
+36.0
+Emmanuel Kemel (HEC Paris, CNRS)
+
+Statistical Programming with R
+
+7 / 75
+
+Conditional applications of functions
+Function tapply(x,y,FUN) applies function FUN to vector x,
+conditionnaly on the values of y
+i.e. the function is applied for each value of y
+setwd("~/Dropbox/Rprogramming/data")
+data=read.table("cps08.csv",header=T, sep=";",dec=",")
+tapply(data$ahe, data$female, mean)
+0
+1
+20.11387 17.48396
+tapply(data$ahe, list(data$female,data$bachelor), mean)
+0
+1
+0 16.58962 24.97840
+1 13.15342 20.87478
+#with(data, tapply(ahe, list(female,bachelor), mean))
+
+Emmanuel Kemel (HEC Paris, CNRS)
+
+Statistical Programming with R
+
+8 / 75
+
+Collapsing data with aggregate
+Aggregate is a wrapper for tapply.
+it can be used like tapply (limited interest)
+it can be used with formula as an argument, and use the attributes of
+the data.frame.
+returns a data.frame
+setwd("~/Dropbox/Rprogramming/data")
+data=read.table("cps08.csv",header=T, sep=";",dec=",")
+aggregate(ahe~female+bachelor, data, mean)
+1
+2
+3
+4
+
+female bachelor
+ahe
+0
+0 16.58962
+1
+0 13.15342
+0
+1 24.97840
+1
+1 20.87478
+
+Emmanuel Kemel (HEC Paris, CNRS)
+
+Statistical Programming with R
+
+9 / 75
+
+Another approach to data analysis
+
+Rstudio has developped a series of packages for data analysis
+dplyr - Essential shortcuts for subsetting, summarizing, rearranging,
+and joining together data sets. dplyr is our go to package for fast data
+manipulation.
+tidyr - Tools for changing the layout of your data sets. Use the gather
+and spread functions to convert your data into the tidy format, the
+layout R likes best.
+
+the packages have their own “synthax”
+See R for Data Science for a presentation:
+https://r4ds.had.co.nz/tidy-data.html
+
+Emmanuel Kemel (HEC Paris, CNRS)
+
+Statistical Programming with R
+
+10 / 75
+
+Another approach to coding
+
+R commands can quickly become long and hard to read
+Example: mean salary for males and females for workers under 30
+setwd("~/Dropbox/Rprogramming/data")
+data=read.table("cps08.csv",header=T, sep=";",dec=",")
+#aggregate(ahe~female, data[,data$age<30], mean)
+#aggregate(ahe~female, data, mean,subset=c(age<30)
+
+Emmanuel Kemel (HEC Paris, CNRS)
+
+Statistical Programming with R
+
+11 / 75
+
+Another approach to coding: the pipe operator
+The pipe operator %>% facilitates chains of operations (from the magrittr
+package)
+f(g(h(x))) would write x %>% h() %>% g() %>% f()
+Example 1
+
+library(magrittr)
+x=rnorm(10)
+#sqrt(mean(exp(x)))
+x %>% exp() %>% mean() %>% sqrt()
+[1] 1.268682
+Example 2
+
+setwd("~/Dropbox/Rprogramming/data")
+data=read.table("cps08.csv",header=T, sep=";",dec=",")
+data %>% subset(age<30) %>% aggregate(ahe~female,.,mean)
+female
+ahe
+1
+0 18.00067
+2
+1 16.50339
+Emmanuel Kemel (HEC Paris, CNRS)
+
+Statistical Programming with R
+
+12 / 75
+
+Outline
+1
+
+Applying funtions
+
+2
+
+Graphics
+Functions for graphics
+Customizing graphics
+
+3
+
+Exploratory statistical analysis
+Discrete variables
+Continuous distributions
+
+4
+
+Multivariate distributions
+Two categorical variables
+One categorical and one continuous variable
+Two continuous variables
+More than two variables
+
+Emmanuel Kemel (HEC Paris, CNRS)
+
+Statistical Programming with R
+
+13 / 75
+
+Outline
+1
+
+Applying funtions
+
+2
+
+Graphics
+Functions for graphics
+Customizing graphics
+
+3
+
+Exploratory statistical analysis
+Discrete variables
+Continuous distributions
+
+4
+
+Multivariate distributions
+Two categorical variables
+One categorical and one continuous variable
+Two continuous variables
+More than two variables
+
+Emmanuel Kemel (HEC Paris, CNRS)
+
+Statistical Programming with R
+
+14 / 75
+
+About graphics
+
+During a statistical analysis, you generally need two types of graphics
+graphics for you
+that help you to understand your data
+and do not need to be particularly pretty
+graphics for others
+that illustrate key patterns in your data
+they must be optimized to convey a clear message
+With R, getting a “raw” graphics of data is very easy/eﬃcient
+Very sophisticated graphics can also be produced, but their conception is
+(much) more time consumming. The use of templates is welcome.
+
+Emmanuel Kemel (HEC Paris, CNRS)
+
+Statistical Programming with R
+
+15 / 75
+
+Graphics with R
+
+Unlike functions seen so far, it is not possible to assign a graphic to an
+object
+Graphics are assigned to graphical devices: a window, or a file.
+There are two kinds of functions:
+primary (High level), that create a new graphical device
+secondary (Low level), that add to an existing graphical device
+
+parameters of graphics can be set locally (when calling a function) or
+globally with function par()
+
+Emmanuel Kemel (HEC Paris, CNRS)
+
+Statistical Programming with R
+
+16 / 75
+
+The generic function plot()
+
+plot() is a generic function that
+creates a graphic enviroment
+produces a graphic that is adapted to
+the type of argument: vector, matrix, formula, list
+the mode of the argument: vector or factor
+
+Emmanuel Kemel (HEC Paris, CNRS)
+
+Statistical Programming with R
+
+17 / 75
+
+Example
+
+70
+
+data=read.table("profsalary.txt", header=T)
+plot(Salary~Experience, data=data)
+
+●
+●
+●
+● ●
+●
+
+●
+●
+●
+● ●
+●
+●
+● ● ● ●
+●
+●
+●
+● ● ●
+●
+●
+● ●
+● ● ●
+● ●
+● ● ●
+●
+● ●
+
+●
+●
+●
+●
+●
+● ●
+● ●
+●
+● ● ● ●
+● ●
+● ●
+● ●
+●
+●
+●
+●
+● ●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+● ●
+●
+●
+●
+● ●
+●
+● ●
+●
+●
+●
+●
+
+●
+● ● ●
+
+60
+
+Salary
+
+●
+●
+●
+● ●
+●
+
+●
+●
+●
+
+●
+●
+
+50
+
+● ●
+●
+
+●
+
+● ●
+●
+● ● ●
+
+40
+
+●
+●
+
+●
+●
+
+●
+
+0
+
+5
+
+10
+
+15
+
+20
+
+25
+
+30
+
+35
+
+Experience
+
+Emmanuel Kemel (HEC Paris, CNRS)
+
+Statistical Programming with R
+
+18 / 75
+
+Other functions are specific
+
+The is a long list of specific plot functions, the most current are:
+boxplot()
+barplot()
+pie()
+interaction.plot()
+mosaicplot()
+
+Emmanuel Kemel (HEC Paris, CNRS)
+
+Statistical Programming with R
+
+19 / 75
+
+Secondary (low level) plots
+
+These function do not open a graphical device, but
+Add something to an existing device
+points()
+lines() or abline()
+text()
+legend()
+arrows()
+
+...
+
+Emmanuel Kemel (HEC Paris, CNRS)
+
+Statistical Programming with R
+
+20 / 75
+
+Outline
+1
+
+Applying funtions
+
+2
+
+Graphics
+Functions for graphics
+Customizing graphics
+
+3
+
+Exploratory statistical analysis
+Discrete variables
+Continuous distributions
+
+4
+
+Multivariate distributions
+Two categorical variables
+One categorical and one continuous variable
+Two continuous variables
+More than two variables
+
+Emmanuel Kemel (HEC Paris, CNRS)
+
+Statistical Programming with R
+
+21 / 75
+
+Main local options
+
+Main options are:
+main
+xlim, ylim
+xlab, ylab
+point types: pch
+lines: lty, lwd
+cex
+col or bg
+
+Emmanuel Kemel (HEC Paris, CNRS)
+
+Statistical Programming with R
+
+22 / 75
+
+Example: customizing the plot of Prof’s Salary
+
+We start from the simple graph
+
+70
+
+data=read.table("profsalary.txt", header=T)
+plot(Salary~Experience, data=data)
+
+60
+
+●
+●
+
+●
+●
+●
+● ●
+●
+
+●
+
+● ●
+
+●
+●
+● ●
+●
+
+●
+●
+
+●
+● ● ●
+
+●
+
+50
+
+Salary
+
+● ●
+●
+●
+● ● ●
+●
+●
+● ● ●
+●
+● ●
+● ●
+●
+●
+● ●
+●
+
+●
+●
+●
+●
+●
+● ●
+● ●
+●
+● ● ● ●
+●
+● ●
+● ●
+●
+●
+●
+● ●
+●
+●
+●
+●
+● ● ● ● ●
+●
+●
+●
+● ●
+●
+●
+●
+● ●
+●
+●
+●
+●
+●
+● ●
+● ●
+●
+●
+●
+
+●
+
+● ●
+●
+
+●
+●
+
+40
+
+● ●
+●
+● ● ●
+●
+
+●
+
+●
+
+●
+
+●
+
+0
+
+5
+
+10
+
+15
+
+20
+
+25
+
+30
+
+35
+
+Experience
+
+Emmanuel Kemel (HEC Paris, CNRS)
+
+Statistical Programming with R
+
+23 / 75
+
+customizing the plot of Prof’s Salary
+adding title, labels, changing the scale
+
+data=read.table("profsalary.txt", header=T)
+plot(Salary~Experience, data=data, xlim=c(0,40), ylim=c(30,100),main
+
+70
+
+●
+●
+●
+● ●
+●●
+●● ● ●●●●
+●●
+●
+●●
+●●
+● ●
+●
+●●
+●
+●●
+●●
+●
+● ●
+●
+●
+● ●●●●●
+●
+●
+● ● ●
+●●
+●
+●●● ● ●
+●● ●
+● ● ●●
+●●
+●
+●●
+● ●●● ●●
+●
+●
+● ●●●
+●
+●●
+●
+●
+● ●●
+
+60
+
+Salary
+
+80
+
+90
+
+100
+
+Experience and Salary
+
+●
+●
+●
+●
+
+40
+
+50
+
+●●
+●
+
+●
+
+●
+
+●
+●
+●
+●●●
+●●
+●
+
+●
+●
+
+●●
+●
+●●●
+● ●
+●
+
+30
+
+●
+
+0
+
+10
+
+20
+
+30
+
+40
+
+Experience
+
+Emmanuel Kemel (HEC Paris, CNRS)
+
+Statistical Programming with R
+
+24 / 75
+
+customizing the plot of Prof’s Salary
+data=read.table("profsalary.txt", header=T)
+plot(Salary~Experience, data=data, xlim=c(0,40),
+ylim=c(30,100),main="Experience and Salary",
+pch=19, col="blue")
+abline(lm(Salary~Experience, data=data),col="red")
+lines(c(0,40),rep(mean(data$Salary),2),lty=2,col="grey", lwd=2)
+text(5,70,"Mean salary")
+grid(col="grey")
+
+70
+
+●
+●
+●
+● ●
+●●
+●● ● ●●●●
+●●
+●
+●●
+●●
+● ●
+●
+●●
+●
+●●
+●●
+●
+● ●
+●
+●
+● ●●●●●
+●
+●
+● ● ●
+●●
+●
+●●● ● ●
+●● ●
+● ● ●●
+●●
+●
+●●
+● ●●● ●●
+●
+●
+● ●●●
+●
+●●
+●
+●
+● ●●
+
+Mean salary
+
+60
+
+Salary
+
+80
+
+90
+
+100
+
+Experience and Salary
+
+●
+●
+●
+●
+
+40
+
+50
+
+●●
+●
+
+●
+
+●
+
+●
+●
+●
+●●●
+●●
+●
+
+●
+●
+
+●●
+●
+●●●
+● ●
+●
+
+30
+
+●
+
+0
+
+Emmanuel Kemel (HEC Paris, CNRS)
+
+10
+
+20
+
+30
+
+Statistical Programming with R
+Experience
+
+40
+
+25 / 75
+
+Main global options
+
+Options can be set globally with function par()
+Example:
+par(bg = "yellow")
+par(mfrow=c(1,2))
+
+Emmanuel Kemel (HEC Paris, CNRS)
+
+Statistical Programming with R
+
+26 / 75
+
+Example
+
+rnorm(100)
+
+−3
+
+−2
+
+−1
+
+−2
+
+−1
+
+−1
+
+0
+
+0
+
+rnorm(100)
+
+rnorm(100)
+
+0
+
+1
+
+1
+
+1
+
+2
+
+2
+
+2
+
+3
+
+par(mfrow=c(1,3),bg="lightyellow", col="red", pch=2) plot(rnorm(100)
+plot(rnorm(100)) plot(rnorm(100))
+
+0
+
+20
+
+40
+
+60
+
+80
+
+Index
+
+Emmanuel Kemel (HEC Paris, CNRS)
+
+100
+
+0
+
+20
+
+40
+
+60
+
+80
+
+100
+
+Index
+
+Statistical Programming with R
+
+0
+
+20
+
+40
+
+60
+
+80
+
+100
+
+Index
+
+27 / 75
+
+Graphical device(s)
+
+For including the graph in a file, functions such as postscript(), pdf()
+or png() open a graphic file
+Several devices can be open at the same time.
+function dev.list() lists the currently open devices
+a device is closed with function dev.oﬀ()
+
+Emmanuel Kemel (HEC Paris, CNRS)
+
+Statistical Programming with R
+
+28 / 75
+
+Another approach to graphics: ggplot2
+
+Rstudio has developped a package for graphics, with its own
+grammar...
+See https://ggplot2-book.org/
+Principle:
+the functions builts on aesthetics that define the frame, variables,
+colors and shapes
+then functions plot content following the structure of the aesthetics
+
+Emmanuel Kemel (HEC Paris, CNRS)
+
+Statistical Programming with R
+
+29 / 75
+
+ggplot2: example
+setwd("~/Dropbox/Rprogramming/data")
+data=read.table("profsalary.txt", header=T)
+library(ggplot2)
+ggplot(data,aes(x=Experience,y=Salary))+
+geom_point()+
+geom_smooth()
+‘geom_smooth()‘ using method = ’loess’ and formula ’y ~ x’
+80
+●
+
+●
+
+●
+●
+●
+●
+●
+●
+
+70
+
+●
+
+●
+
+●
+
+●
+
+●
+
+●
+
+●
+
+●
+
+●
+
+●
+
+●
+
+●
+
+●
+
+●
+
+●
+●
+
+●
+
+●
+
+●
+
+●
+
+●
+
+●
+
+●
+
+●
+
+●
+
+●
+
+●
+
+●
+
+●
+●
+
+●
+
+●
+
+●
+
+●
+
+●
+
+●
+
+●
+●
+
+●
+●
+●
+
+●
+
+●
+
+●
+
+●
+
+●
+●
+
+●
+●
+
+●
+
+●
+
+●
+
+●
+
+●
+
+●
+
+●
+●
+
+●
+●
+
+●
+
+●
+
+●
+●
+
+●
+
+●
+
+●
+
+●
+
+●
+
+●
+
+●
+●
+
+●
+●
+
+●
+
+●
+
+●
+●
+
+●
+
+●
+
+●
+●
+●
+
+60
+
+●
+
+●
+
+●
+
+Salary
+
+●
+●
+●
+
+●
+●
+
+●
+
+●
+
+●
+●
+
+●
+
+●
+●
+
+●
+
+50
+
+●
+
+●
+
+●
+●
+
+●
+
+●
+
+40
+
+●
+
+●
+
+●
+●
+
+●
+
+0
+
+10
+
+20
+
+30
+
+Experience
+
+Emmanuel Kemel (HEC Paris, CNRS)
+
+Statistical Programming with R
+
+30 / 75
+
+ggplot2: example 2
+setwd("~/Dropbox/Rprogramming/data")
+data=read.table("CPS08.csv", header=T,sep=";",dec=",")
+data$female=factor(data$female)
+ggplot(data,aes(x=ahe,color=female))+
+geom_density()
+
+0.04
+
+density
+
+female
+0
+1
+
+0.02
+
+0.00
+0
+
+20
+
+40
+
+60
+
+80
+
+ahe
+
+Emmanuel Kemel (HEC Paris, CNRS)
+
+Statistical Programming with R
+
+31 / 75
+
+Outline
+1
+
+Applying funtions
+
+2
+
+Graphics
+Functions for graphics
+Customizing graphics
+
+3
+
+Exploratory statistical analysis
+Discrete variables
+Continuous distributions
+
+4
+
+Multivariate distributions
+Two categorical variables
+One categorical and one continuous variable
+Two continuous variables
+More than two variables
+
+Emmanuel Kemel (HEC Paris, CNRS)
+
+Statistical Programming with R
+
+32 / 75
+
+Outline
+1
+
+Applying funtions
+
+2
+
+Graphics
+Functions for graphics
+Customizing graphics
+
+3
+
+Exploratory statistical analysis
+Discrete variables
+Continuous distributions
+
+4
+
+Multivariate distributions
+Two categorical variables
+One categorical and one continuous variable
+Two continuous variables
+More than two variables
+
+Emmanuel Kemel (HEC Paris, CNRS)
+
+Statistical Programming with R
+
+33 / 75
+
+Frequencies: computation
+
+Absolute frequencies (ie. counts) are given by function table()
+Relative frequencies (i.e. proportions) are given by prop.table() that
+takes a table as argument
+
+Emmanuel Kemel (HEC Paris, CNRS)
+
+Statistical Programming with R
+
+34 / 75
+
+Frequencies
+data=read.table("cps08.csv",header=T, sep=";",dec=",")
+table(data$female)
+0
+1
+4375 3336
+prop.table(table(data$female))
+0
+1
+0.5673713 0.4326287
+data$female=factor(data$female, labels=c("M","F"))
+table(data$female)
+M
+F
+4375 3336
+prop.table(table(data$female))
+M
+F
+0.5673713 0.4326287
+
+Emmanuel Kemel (HEC Paris, CNRS)
+
+Statistical Programming with R
+
+35 / 75
+
+Frequencies: representation
+
+discrete variables should be represented by a barplot, that can be
+produced with function... barplot()
+barplot() takes as argument a table or a matrix, whose row elements
+will be stacked.
+
+Emmanuel Kemel (HEC Paris, CNRS)
+
+Statistical Programming with R
+
+36 / 75
+
+Example of representation
+
+0
+
+0
+
+1000
+
+2000
+
+2000
+
+4000
+
+3000
+
+6000
+
+4000
+
+barplot(table(data$female))
+barplot(matrix(table(data$female),ncol=1))
+
+M
+
+Emmanuel Kemel (HEC Paris, CNRS)
+
+F
+
+Statistical Programming with R
+
+37 / 75
+
+Usual test(s)
+When dealing with a variable possibly taking 2 values, a standard test
+is the binomial test
+Example:
+binom.test(table(data$female))
+Exact binomial test
+
+data: table(data$female)
+number of successes = 4375, number of trials = 7711,
+p-value < 2.2e-16
+alternative hypothesis: true probability of success is not equal
+95 percent confidence interval:
+0.5562245 0.5784671
+sample estimates:
+probability of success
+0.5673713
+Emmanuel Kemel (HEC Paris, CNRS)
+
+Statistical Programming with R
+
+38 / 75
+
+Usual test(s)
+
+When the variable takes more than two values, a c 2 test can be run
+chisq.test(table(data$female))
+Chi-squared test for given probabilities
+data: table(data$female)
+X-squared = 140, df = 1, p-value < 2.2e-16
+
+Emmanuel Kemel (HEC Paris, CNRS)
+
+Statistical Programming with R
+
+39 / 75
+
+Outline
+1
+
+Applying funtions
+
+2
+
+Graphics
+Functions for graphics
+Customizing graphics
+
+3
+
+Exploratory statistical analysis
+Discrete variables
+Continuous distributions
+
+4
+
+Multivariate distributions
+Two categorical variables
+One categorical and one continuous variable
+Two continuous variables
+More than two variables
+
+Emmanuel Kemel (HEC Paris, CNRS)
+
+Statistical Programming with R
+
+40 / 75
+
+Frequencies and histogram
+
+table() and prob.table() can be used to observe the empirical
+frequencies of a continuous variable
+Frequencies can be represented by an histogram hist() or by the
+cumulative empirical function, given by ecdf()
+Other usual statistics include
+mean(), median(), var(), sd(), min(), max(), quantile(),
+kurtosis()
+
+Emmanuel Kemel (HEC Paris, CNRS)
+
+Statistical Programming with R
+
+41 / 75
+
+Illustration
+
+0.6
+0.4
+
+Fn(x)
+
+1000
+0
+
+0.0
+
+0.2
+
+500
+
+Frequency
+
+1500
+
+0.8
+
+1.0
+
+2000
+
+data=read.table("cps08.csv", header=T, sep=";", dec=",")
+hist(data$ahe, main="", col="grey")
+plot(ecdf(data$ahe),verticals=T, lwd=2, main="")
+
+0
+
+20
+
+40
+
+60
+
+80
+
+0
+
+20
+
+data$ahe
+
+Emmanuel Kemel (HEC Paris, CNRS)
+
+40
+
+60
+
+80
+
+x
+
+Statistical Programming with R
+
+42 / 75
+
+Illustration: density
+the density computes a smoother for the histogram
+
+0.03
+0.00
+
+0.01
+
+0.02
+
+Density
+
+0.04
+
+0.05
+
+plot(density(data$ahe), lwd=2, main="")
+
+0
+
+20
+
+40
+
+60
+
+80
+
+N = 7711 Bandwidth = 1.294
+
+Emmanuel Kemel (HEC Paris, CNRS)
+
+Statistical Programming with R
+
+43 / 75
+
+Boxplot
+Another usual way to represent univariate variables is the boxplot, with
+function .... boxplot()
+
+80
+
+boxplot(data$ahe, main="")
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+
+0
+
+20
+
+40
+
+60
+
+●
+
+The boxplot represents quartiles and outliers that deviate 1.5 IQR
+from Q1 or Q3.
+Emmanuel Kemel (HEC Paris, CNRS)
+
+Statistical Programming with R
+
+44 / 75
+
+QQ plots
+qqnorm() plots the quantiles of the distributions against the quantiles
+of a normal distribution.
+qqnorm(data$ahe, main="")
+80
+
+●
+
+●
+●
+
+●
+
+40
+20
+
+Sample Quantiles
+
+60
+
+●
+●
+●●●
+
+0
+
+●
+
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●●
+●
+●●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+● ●●●●●
+
+−4
+
+−2
+
+0
+
+2
+
+4
+
+Theoretical Quantiles
+
+Emmanuel Kemel (HEC Paris, CNRS)
+
+Statistical Programming with R
+
+45 / 75
+
+Usual test(s)
+t.test() compares the mean of the variable to a given variable
+t.test(data$ahe, mu=20)
+One Sample t-test
+data: data$ahe
+t = -8.8675, df = 7710, p-value < 2.2e-16
+alternative hypothesis: true mean is not equal to 20
+95 percent confidence interval:
+18.74975 19.20244
+sample estimates:
+mean of x
+18.97609
+#t.test(data$ahe, mu=20, alternative="greater")
+
+Emmanuel Kemel (HEC Paris, CNRS)
+
+Statistical Programming with R
+
+46 / 75
+
+Usual test(s) (continued)
+
+Wilcoxon rank test (a non parametric test, less powerful but robust to
+outliers)
+wilcox.test(data$ahe, mu=20)
+Wilcoxon signed rank test with continuity correction
+data: data$ahe
+V = 11035832, p-value < 2.2e-16
+alternative hypothesis: true location is not equal to 20
+#wilcox.test(data$ahe, mu=20, alternative="greater")
+
+Emmanuel Kemel (HEC Paris, CNRS)
+
+Statistical Programming with R
+
+47 / 75
+
+Outline
+1
+
+Applying funtions
+
+2
+
+Graphics
+Functions for graphics
+Customizing graphics
+
+3
+
+Exploratory statistical analysis
+Discrete variables
+Continuous distributions
+
+4
+
+Multivariate distributions
+Two categorical variables
+One categorical and one continuous variable
+Two continuous variables
+More than two variables
+
+Emmanuel Kemel (HEC Paris, CNRS)
+
+Statistical Programming with R
+
+48 / 75
+
+Outline
+1
+
+Applying funtions
+
+2
+
+Graphics
+Functions for graphics
+Customizing graphics
+
+3
+
+Exploratory statistical analysis
+Discrete variables
+Continuous distributions
+
+4
+
+Multivariate distributions
+Two categorical variables
+One categorical and one continuous variable
+Two continuous variables
+More than two variables
+
+Emmanuel Kemel (HEC Paris, CNRS)
+
+Statistical Programming with R
+
+49 / 75
+
+Joint and conditional frequencies
+Consider X and Y two random variables that each take a finite
+number of values,
+we generally want to study their joint or conditional probability
+distributions
+With R, each variable will be a factor.
+The joint absolute frequencies will be given by function table(), that
+creates a contingency table
+The relative frequencies will be given by function prop.table(), that
+applies to a table
+Conditional frequencies are also given by prop.table() when indicating
+the dimension to fix
+1 for fixing the column variable
+2 for fixing the row variable
+
+Note that these functions can be applied to more than two variables.
+Emmanuel Kemel (HEC Paris, CNRS)
+
+Statistical Programming with R
+
+50 / 75
+
+Example of contingency table and joint frequencies
+
+data(UCBAdmissions)
+data=UCBAdmissions[,,1]
+print(data)
+Gender
+Admit
+Male Female
+Admitted 512
+89
+Rejected 313
+19
+prop.table(data)
+Gender
+Admit
+Male
+Female
+Admitted 0.54876742 0.09539121
+Rejected 0.33547696 0.02036442
+
+Emmanuel Kemel (HEC Paris, CNRS)
+
+Statistical Programming with R
+
+51 / 75
+
+Examples of conditional frequencies
+Conditional frequencies of variable admission, given gender
+prop.table(data,2)
+Gender
+Admit
+Male
+Female
+Admitted 0.6206061 0.8240741
+Rejected 0.3793939 0.1759259
+
+Conditional frequencies of variable gender given admission
+prop.table(data,1)
+Gender
+Admit
+Male
+Female
+Admitted 0.85191348 0.14808652
+Rejected 0.94277108 0.05722892
+
+Emmanuel Kemel (HEC Paris, CNRS)
+
+Statistical Programming with R
+
+52 / 75
+
+Graphical representation
+Joint frequencies can be represented with a mosaic plot
+plot(data)
+data
+Rejected
+
+Male
+Female
+
+Gender
+
+Admitted
+
+Admit
+
+Emmanuel Kemel (HEC Paris, CNRS)
+
+Statistical Programming with R
+
+53 / 75
+
+Graphical representation
+Conditional frequencies
+
+1.0
+0.8
+0.6
+0.4
+0.2
+0.0
+
+0.0
+
+0.2
+
+0.4
+
+0.6
+
+0.8
+
+1.0
+
+barplot(prop.table(data,2))
+barplot(t(prop.table(data,1)))
+
+Male
+
+Emmanuel Kemel (HEC Paris, CNRS)
+
+Female
+
+Admitted
+
+Statistical Programming with R
+
+Rejected
+
+54 / 75
+
+Classical tests
+Usual tests for contingencies tables are
+the Fisher exact test
+fisher.test(data)
+Fisher's Exact Test for Count Data
+data: data
+p-value = 1.669e-05
+alternative hypothesis: true odds ratio is not equal to 1
+95 percent confidence interval:
+0.1970420 0.5920417
+sample estimates:
+odds ratio
+0.3495628
+
+Emmanuel Kemel (HEC Paris, CNRS)
+
+Statistical Programming with R
+
+55 / 75
+
+Classical tests (continued)
+
+the c 2 test
+chisq.test(data)
+Pearson's Chi-squared test with Yates' continuity
+correction
+data: data
+X-squared = 16.372, df = 1, p-value = 5.205e-05
+
+Emmanuel Kemel (HEC Paris, CNRS)
+
+Statistical Programming with R
+
+56 / 75
+
+Illustration of Simpson’s paradox: the “illusion”
+UCB Admissions
+Male
+B
+
+C
+
+D
+
+EF
+
+A B
+
+Female
+C
+D
+
+E F
+
+Rejected
+
+Admit
+
+Admitted
+
+A
+
+Gender
+
+Emmanuel Kemel (HEC Paris, CNRS)
+
+Statistical Programming with R
+
+57 / 75
+
+Illustration of Simpson’s paradox: the explanation
+UCB Admissions
+Male
+
+Rejected
+
+Female
+Admitted
+
+Rejected
+
+F
+
+E
+
+D
+
+C
+
+Dept
+
+B
+
+A
+
+Admitted
+
+Gender
+
+Emmanuel Kemel (HEC Paris, CNRS)
+
+Statistical Programming with R
+
+58 / 75
+
+Outline
+1
+
+Applying funtions
+
+2
+
+Graphics
+Functions for graphics
+Customizing graphics
+
+3
+
+Exploratory statistical analysis
+Discrete variables
+Continuous distributions
+
+4
+
+Multivariate distributions
+Two categorical variables
+One categorical and one continuous variable
+Two continuous variables
+More than two variables
+
+Emmanuel Kemel (HEC Paris, CNRS)
+
+Statistical Programming with R
+
+59 / 75
+
+The statistics
+
+Consider Y and X two random variables, one continuous and the second
+discrete
+In order to assess the dependence of the two variables we can compare:
+the distributions of Y conditionally on the (finite number of) values of
+X
+more specifically, the conditional mean of Y conditionally on the
+(finite number of) values of X
+
+Emmanuel Kemel (HEC Paris, CNRS)
+
+Statistical Programming with R
+
+60 / 75
+
+Conditional distributions
+
+The most flexible function for computing any statistic conditionally on any
+other variable(s) is aggregate()
+one or several variables can be treated
+conditions can rely on one of several variables
+one or several statistics can be computed
+
+Emmanuel Kemel (HEC Paris, CNRS)
+
+Statistical Programming with R
+
+61 / 75
+
+Simple example
+
+data=read.table("cps08.csv", header=T, sep=";", dec=",")
+aggregate(ahe~female, data=data, mean)
+female
+ahe
+1
+0 20.11387
+2
+1 17.48396
+aggregate(ahe~female+bachelor, data=data, mean)
+1
+2
+3
+4
+
+female bachelor
+ahe
+0
+0 16.58962
+1
+0 13.15342
+0
+1 24.97840
+1
+1 20.87478
+
+Emmanuel Kemel (HEC Paris, CNRS)
+
+Statistical Programming with R
+
+62 / 75
+
+Simple example continued
+
+aggregate(ahe~female+bachelor, data=data,
+function(x) c(mean=mean(x),med=median(x),sd=sd(x)))
+1
+2
+3
+4
+
+female bachelor ahe.mean
+ahe.med
+ahe.sd
+0
+0 16.589619 14.903846 8.157563
+1
+0 13.153424 12.019231 6.270027
+0
+1 24.978404 23.076923 11.778632
+1
+1 20.874779 19.230770 9.657140
+
+Emmanuel Kemel (HEC Paris, CNRS)
+
+Statistical Programming with R
+
+63 / 75
+
+Graphing conditional distributions
+
+80
+
+plot(ahe~factor(female), data=data)
+
+●
+●
+●
+
+●
+●
+●
+●
+●
+
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+
+40
+
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+
+0
+
+20
+
+ahe
+
+60
+
+●
+
+0
+
+1
+factor(female)
+
+Emmanuel Kemel (HEC Paris, CNRS)
+
+Statistical Programming with R
+
+64 / 75
+
+Graphing conditional distributions: densities
+with(subset(data,female==1),
+plot(density(ahe),col="red",lwd=2))
+with(subset(data,female==0),
+lines(density(ahe),col="blue",lwd=2))
+
+0.03
+0.00
+
+0.01
+
+0.02
+
+Density
+
+0.04
+
+0.05
+
+density.default(x = ahe)
+
+0
+
+20
+
+40
+
+60
+
+80
+
+N = 3336 Bandwidth = 1.396
+
+Emmanuel Kemel (HEC Paris, CNRS)
+
+Statistical Programming with R
+
+65 / 75
+
+Graphing conditional distributions
+with(subset(data,female==1),
+plot(ecdf(ahe),do.points=F, verticals=T,col="red",lwd=2))
+with(subset(data,female==0),
+lines(ecdf(ahe),do.points=F, verticals=T,col="blue",lwd=2))
+
+0.0
+
+0.2
+
+0.4
+
+Fn(x)
+
+0.6
+
+0.8
+
+1.0
+
+ecdf(ahe)
+
+0
+
+20
+
+40
+
+60
+
+80
+
+x
+
+Emmanuel Kemel (HEC Paris, CNRS)
+
+Statistical Programming with R
+
+66 / 75
+
+Graphics conditional means
+
+0
+
+5
+
+10
+
+15
+
+20
+
+tab=aggregate(ahe~female,data=data, mean)
+with(tab,barplot(ahe, names.arg=female))
+
+0
+
+Emmanuel Kemel (HEC Paris, CNRS)
+
+1
+
+Statistical Programming with R
+
+67 / 75
+
+Graphics conditional means
+tab=aggregate(ahe~female,data=data, mean)
+with(data,interaction.plot(female, bachelor, ahe, mean))
+
+24
+
+bachelor
+
+20
+18
+14
+
+16
+
+mean of ahe
+
+22
+
+1
+0
+
+0
+
+1
+female
+
+Emmanuel Kemel (HEC Paris, CNRS)
+
+Statistical Programming with R
+
+68 / 75
+
+Outline
+1
+
+Applying funtions
+
+2
+
+Graphics
+Functions for graphics
+Customizing graphics
+
+3
+
+Exploratory statistical analysis
+Discrete variables
+Continuous distributions
+
+4
+
+Multivariate distributions
+Two categorical variables
+One categorical and one continuous variable
+Two continuous variables
+More than two variables
+
+Emmanuel Kemel (HEC Paris, CNRS)
+
+Statistical Programming with R
+
+69 / 75
+
+Conditional distributions
+
+Consider Y and X two continuous random variables,
+In order to assess the dependence of the two variables we can:
+compute their correlation, but that will only assess the linear
+dependence
+compare the conditional of one variable on specific values or ranges of
+the other variable. (cf previous subsection)
+
+Emmanuel Kemel (HEC Paris, CNRS)
+
+Statistical Programming with R
+
+70 / 75
+
+Examples
+
+70
+
+data=read.table("profsalary.txt", header=T)
+rho=cor(data$Salary, data$Experience)
+plot(Salary~Experience, data=data)
+text(25,50,paste("cor =",round(rho,2)))
+
+60
+
+●
+●
+
+●
+● ● ●
+
+●
+●
+●
+●
+● ●
+●
+
+50
+
+Salary
+
+● ●
+●
+●
+● ● ●
+●
+●
+● ● ●
+●
+● ●
+● ●
+●
+●
+● ●
+●
+
+●
+●
+●
+●
+●
+● ●
+● ●
+●
+● ● ● ●
+● ●
+●
+● ●
+● ●
+●
+●
+●
+● ●
+●
+● ●
+●
+●
+●
+●
+●
+● ● ● ● ●
+●
+●
+●
+● ●
+●
+●
+●
+● ●
+●
+●
+●
+● ●
+●
+●
+● ●
+● ●
+●
+●
+●
+●
+●
+
+●
+
+● ●
+●
+
+●
+●
+
+cor = 0.82
+
+40
+
+● ●
+●
+● ● ●
+●
+
+●
+
+●
+
+●
+
+●
+
+0
+
+5
+
+10
+
+15
+
+20
+
+25
+
+30
+
+35
+
+Experience
+
+Emmanuel Kemel (HEC Paris, CNRS)
+
+Statistical Programming with R
+
+71 / 75
+
+Examples
+
+60
+
+● ●
+●
+●
+
+● ●
+
+●
+●
+●
+
+● ●
+● ● ● ●
+● ●
+● ●
+●
+● ● ●
+● ●
+●
+●
+●
+
+● ● ●
+● ● ●
+● ●
+● ● ●
+
+●
+● ●
+● ●
+● ● ● ●
+
+● ●
+● ● ●
+
+50
+
+data$Salary
+
+70
+
+data=read.table("profsalary.txt", header=T)
+qqplot( data$Experience, data$Salary)
+
+●
+
+●
+●
+
+40
+
+● ●
+● ●
+●
+
+0
+
+5
+
+10
+
+15
+
+20
+
+25
+
+30
+
+35
+
+data$Experience
+
+Emmanuel Kemel (HEC Paris, CNRS)
+
+Statistical Programming with R
+
+72 / 75
+
+Outline
+1
+
+Applying funtions
+
+2
+
+Graphics
+Functions for graphics
+Customizing graphics
+
+3
+
+Exploratory statistical analysis
+Discrete variables
+Continuous distributions
+
+4
+
+Multivariate distributions
+Two categorical variables
+One categorical and one continuous variable
+Two continuous variables
+More than two variables
+
+Emmanuel Kemel (HEC Paris, CNRS)
+
+Statistical Programming with R
+
+73 / 75
+
+Variance-covariance matrix
+
+Considering k continuous random variables,
+The variance covariance matrix is given by cov()
+The matrix of correlations is given by cor()
+
+Emmanuel Kemel (HEC Paris, CNRS)
+
+Statistical Programming with R
+
+74 / 75
+
+Multiple plots
+library(foreign)
+data=read.dta("journals.dta")
+plot(data[,4:8])
+
+●●●
+● ● ●●
+●●
+●●
+● ●
+●
+● ●●●● ●
+●●
+●●●●●
+●
+●●●
+● ●● ●
+●
+●●●
+●
+●●
+●
+●●
+●
+●● ● ●
+●
+●
+●
+●●
+●●●
+●
+●
+●
+●
+●●
+●
+●
+●
+●
+●
+●
+●
+●
+●●
+●
+●
+●
+●
+●●
+●
+●
+●
+●
+●
+●
+●●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●●
+●●
+●
+●●
+●
+●
+●
+●●●
+●
+●
+●
+●●
+●
+●
+●
+● ●
+●
+●
+●
+●
+●
+●
+●●●
+●
+●
+●●
+
+● ●● ●
+●
+●
+● ●
+●
+●●●●
+● ●●
+●●●
+●●
+●
+●
+●
+●
+●
+●
+●
+●●
+●●
+●●
+●
+●
+● ●
+●
+●
+●
+●
+● ●●●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●●
+●
+●
+●
+●
+● ●
+●
+●
+●●
+●
+●
+●
+●
+●
+●
+●
+●
+●●● ●●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+● ●●● ●●
+●
+●
+●
+●
+●
+●●●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+● ●
+● ●
+● ●
+
+4000 8000
+0
+
+●
+
+charpp
+
+●
+
+●●
+
+●
+
+●
+●
+●
+●
+●●● ● ●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●●
+●
+●
+●
+●
+●
+●
+●
+●
+●●●
+●●
+●
+●
+●
+●●●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●●
+● ●●
+●
+●
+●●●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+● ●● ●
+●●
+●
+●
+●
+● ●●
+●
+●
+●●●
+●
+●
+●
+●
+●●●
+●
+●
+●
+●
+●
+●
+●
+●● ●
+●
+●
+●
+●●
+●●
+●
+●●
+●
+●
+
+●
+●
+
+●
+●
+●
+
+●
+● ●
+●
+● ● ● ●
+●● ●●● ●
+●
+●●
+●●
+●
+●
+●
+●
+●
+●●●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●● ●●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●●●
+●
+●
+●
+●
+●
+●
+●●
+●●
+●
+●
+●●● ●
+●●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●●
+●
+●
+●
+●
+●
+●
+●
+●●●
+●
+●●
+●
+●
+●
+●
+
+●
+
+1000
+
+2000
+
+●
+
+●
+●
+
+●
+●
+●
+●●
+●
+●
+●
+●
+●
+●
+● ●
+●
+●
+●
+●
+●
+●
+●● ●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●●
+●
+●
+●
+●
+●
+●●
+● ●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+● ●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●● ●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+● ● ● ●
+●
+●
+
+●
+●
+
+●
+
+●
+●
+●
+
+● ●
+●●
+● ●
+● ●●
+●
+●
+●● ● ●
+●●
+●
+●●
+●
+●●
+●
+●
+●● ● ● ●
+●
+●●
+●
+●
+●
+●●
+●
+●
+●●
+●
+●
+●
+●●
+●
+●●
+●
+●
+●
+●
+●
+●
+●
+●●
+●
+●
+●
+●
+●
+●
+●
+●
+●●●
+●
+●
+● ●
+●
+●
+●● ●
+●
+●
+●
+●
+●●
+●
+●
+●
+●
+●
+●
+●
+●
+●●
+●
+●
+●
+●
+●
+●●
+●●
+●
+●
+●●
+●●
+●
+●
+●●
+●●
+●●
+●●
+●
+●
+●
+●
+●
+●
+● ●
+●●
+●
+●
+●●
+●
+●
+●
+●●
+●
+●
+●●●
+●
+●
+●
+●
+●●
+●
+●
+●●
+●
+●
+●
+●
+●
+●
+●● ●●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●●
+●●
+●
+●
+●
+●
+●
+●●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●●
+●● ● ●
+●
+●
+●
+●●
+●
+●
+●●
+●●
+●●
+●
+●● ●●
+●
+●●
+●
+●●● ●
+●
+●
+●
+●
+●
+●
+●
+●
+● ●●
+●
+●
+
+2000
+
+2000
+
+●
+●
+●
+●●
+●
+●●
+●
+●● ●● ●●
+●●
+●
+●
+● ●●
+●
+●
+● ● ●
+●
+●
+● ●●●
+●● ●
+●
+●
+●●
+●
+●●
+●
+●●
+●
+●
+●
+●
+●
+●
+●
+●●
+●
+●
+●
+●
+●
+●●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●●
+●●●
+●
+●●
+●●
+●
+●
+●
+●
+●
+●
+●
+●
+●●
+●
+●
+●●●
+●
+●
+●
+●
+●
+● ● ●● ●
+●
+●
+●
+●
+●
+●
+●
+●
+●●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●●
+●
+
+●
+
+●●●
+●
+●
+●
+●
+●●
+●
+●
+●
+●●
+●●●●
+●
+● ●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●●●
+●
+●
+●●
+●●● ●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●●
+● ●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●●
+●
+●
+●
+●
+●●●
+●●●●
+●
+●
+●
+●
+●
+●
+●
+●
+●●●
+●
+●
+●
+●
+● ●
+●●●●
+●●
+●
+●
+●
+●
+●
+●
+●
+●
+●● ● ●
+●
+●
+●●
+●
+●
+●
+●
+●● ●
+●
+
+●
+
+●● ● ●●
+●
+●
+●
+
+●
+●
+
+●
+
+●
+
+●
+●●
+●
+●
+●●
+●
+●
+●●
+●
+●
+●●●
+●
+●
+●
+●
+●
+●●
+● ● ● ●●
+●●
+●
+●●
+●
+●
+● ●●
+●●
+●●
+●
+●
+●●
+●●
+●
+●
+●
+●
+●
+●
+●
+● ●
+●
+●
+●
+●●
+●
+●●
+●●
+●
+●
+●●
+●
+● ●●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●●
+●
+●
+●
+●
+●
+●
+●
+●●
+●●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●●
+● ●●●●
+●
+●●●
+●
+●
+●
+● ●●
+●
+●
+
+●
+
+●
+
+●
+
+●
+
+●
+
+●
+
+●
+●
+
+●
+●
+
+●
+●●●
+●●
+●
+● ●
+●
+●
+●● ●
+●
+●
+●
+● ●
+●●
+●
+●●
+●
+●
+●
+●
+●
+●●
+●●
+●●
+●
+●
+●
+●
+●
+● ●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●●●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●●
+●●●
+●
+●●
+●
+●●
+●●
+●
+● ●
+●
+●
+●●
+●
+●
+●
+
+●
+
+●
+●
+●
+●●
+● ●
+●
+●●
+●● ● ●
+●
+●
+●
+●
+●
+●
+●
+●
+● ●●
+●
+●●
+●
+●
+●
+●
+●
+●●
+●
+●
+●
+●
+●
+●●
+●
+●
+●●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+● ●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+
+citestot
+
+●
+●
+●● ●
+
+●
+●
+● ●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●●
+●
+●
+●
+●
+●
+●
+●
+●●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+● ●
+●
+●
+●●
+●
+●
+●
+●
+●
+●
+●● ●
+●
+●
+●
+●
+● ●●
+●
+
+●
+
+●
+
+●
+
+●
+
+●
+●
+●
+● ● ● ●●
+●●
+●
+●●
+●
+●
+●
+●●● ●●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●●●
+●
+●
+●●
+●
+●
+●
+●
+●
+●
+●●
+●
+●●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●● ●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●●
+●
+●
+●
+●
+●
+●●
+●●●
+
+date1
+
+●
+●
+
+●
+●
+●
+
+●
+
+5000
+
+1950
+
+●
+
+●
+
+1850
+
+500 1500
+
+pages
+●
+●
+
+●● ●
+●
+●
+● ●
+●
+●
+●
+●●●● ●● ●●
+●●
+●
+●
+●●● ●
+●●
+●● ● ●●
+●
+●
+●
+●●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●●● ● ●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●●
+●
+●
+●
+● ●●●
+● ●●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●●●●●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●● ● ●● ●
+●
+●
+●●
+●
+●
+●●●●●
+●
+●
+●
+●
+
+Emmanuel Kemel (HEC Paris, CNRS)
+
+●●
+●
+●
+●● ● ●
+●
+●● ●
+●
+●
+● ●●●
+●●● ●●
+●●
+●
+●
+●●
+●●●
+●
+●●
+●
+●
+●
+●
+●
+●●
+●●
+●
+●
+●
+●●
+●●
+●●
+●
+●
+●
+●
+●
+●
+●●
+●
+●
+●
+●
+●●
+●
+●
+●
+●● ●●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●●
+●●
+●
+●
+●
+●●
+●
+●
+●
+●
+●
+●
+●
+●●
+●
+●
+●
+●
+●
+●●
+●
+●
+●
+●
+●
+● ●●
+●
+●
+●
+●
+●
+●
+●●
+●
+●
+●
+●
+●
+● ●●
+●●● ●●●
+●
+
+●
+
+● ●
+
+●
+●●
+●
+●
+●
+●
+●●●
+●●●●
+●
+●●
+●
+●
+●●●
+●
+●
+●
+●
+●
+●
+●●
+●●
+●
+●
+●
+●
+●●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●●●
+●
+●
+●
+●
+●
+●
+●
+●
+●●●
+●
+●●
+●
+●
+●
+●●
+●
+●
+●
+●
+●
+●●
+●
+●
+●
+●●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●●
+●
+●
+●
+●
+●
+●
+●
+●
+● ●● ●●●
+●
+●●●
+●
+●
+●●●●
+●
+●
+●
+●
+●
+●●●
+●●
+
+●
+
+●
+
+●
+
+●
+
+●●●
+●
+●
+●●
+●
+●
+●
+●
+●● ●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●● ●●●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●● ●●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●●●●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+
+●
+
+●
+●
+
+0
+
+●
+
+1000
+
+●
+
+● ●
+●
+●●
+
+●
+●
+● ●●
+●
+●
+● ●●
+● ●
+●
+●
+●
+●
+●
+●
+●●
+●
+●●●
+●
+●●●●● ● ●
+●●
+●
+●
+●
+●●●
+●
+●
+●●●●● ●
+●●●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+● ●
+●
+●
+●
+●
+●
+●
+●
+● ●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●●
+●● ● ●
+●
+●●
+●●
+●
+●
+
+●
+
+●
+
+●
+● ●
+●
+●
+● ●●
+● ● ●●
+●
+● ●
+●
+●
+● ●
+●
+●
+●●
+●
+●
+●●
+●●
+●● ●
+●
+●
+●
+● ●
+●
+●●
+●
+●●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●● ●
+●
+●
+●
+●
+●
+●
+●
+●
+● ●●
+● ●
+●●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●●●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●●
+●
+●
+●
+●
+●●
+●
+●
+●
+●
+●
+●
+●
+●
+●●
+●
+●
+●●
+● ●●
+●
+●●
+●
+●
+●
+●●
+●
+
+libprice
+
+4000 8000
+
+●
+
+0
+
+●
+
+5000
+
+0
+
+●
+●
+
+2000
+
+500 1500
+
+1850
+
+Statistical Programming with R
+
+1950
+
+75 / 75
+
+

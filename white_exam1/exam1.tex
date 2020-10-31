@@ -1,0 +1,114 @@
+% Created 2020-10-30 Fri 12:21
+% Intended LaTeX compiler: pdflatex
+\documentclass[11pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{graphicx}
+\usepackage{grffile}
+\usepackage{longtable}
+\usepackage{wrapfig}
+\usepackage{rotating}
+\usepackage[normalem]{ulem}
+\usepackage{amsmath}
+\usepackage{textcomp}
+\usepackage{amssymb}
+\usepackage{capt-of}
+\usepackage{hyperref}
+\author{Laurent Siksous}
+\date{\today}
+\title{Exam R I}
+\hypersetup{
+ pdfauthor={Laurent Siksous},
+ pdftitle={Exam R I},
+ pdfkeywords={},
+ pdfsubject={},
+ pdfcreator={Emacs 27.1.50 (Org mode 9.4)}, 
+ pdflang={English}}
+\begin{document}
+
+\maketitle
+\section*{Description}
+\label{sec:org27c1d9f}
+The exam will take the form of MCQs. There will be 3 types of questions.
+•questions about R and programming (5p)
+•questions about understanding of R scripts (10p)
+•questions asking you to use R in order to make calculations (5p)
+
+<TBD>
+\ldots{} In addition, there will be a bonus of 1 or 2 points for the prediction.
+Solutions with a predictionR2between 0.7 and 0.85 will get one additional
+point. Solutions with a prediction R2 larger than 0.85 will get two additional
+points.
+<TBD>
+
+\section*{Questions about R}
+\label{sec:orgd29dbd5}
+\subsection*{Question 1}
+\label{sec:org47837d8}
+The function factor() takes as an argument:
+\begin{itemize}
+\item a sortable vector of character type
+\item a boolean
+\item a matrix
+\item any vector
+\end{itemize}
+\subsection*{Question 2}
+\label{sec:org2881b24}
+The function summary()
+\begin{itemize}
+\item list the environement object and values
+\item takes no argument
+\item prints statistics of a data frame
+\item invokes methods of the class of its first argument
+\end{itemize}
+\section*{Questions about interpretations of R code}
+\label{sec:org5c9b29e}
+\subsection*{Question 3}
+\label{sec:orgd6da281}
+What does this code do ?
+\begin{verbatim}
+plot(cars$model,cars$price)
+\end{verbatim}
+\begin{itemize}
+\item it creates a graph of two vectors
+\item it creates and display a graph of two variables
+\item it print two columns of a data set
+\item it creates a frequency table of variables
+\end{itemize}
+\subsection*{Question 4}
+\label{sec:org6dd3365}
+Which command would return the same value as the following chunk
+\begin{verbatim}
+range(cars$price)
+\end{verbatim}
+\begin{itemize}
+\item c(min(cars\$price),max(cars\$price))
+\item cars[pmin(\$price)][pmax(cars\$price)]
+\item cars[which.min(cars\$price),"price"] + cars[which.max(cars\$price),"price"]
+\item seq(min(cars\$price),max(cars\$price))
+\end{itemize}
+\section*{Questions about production of R code}
+\label{sec:org2761180}
+We use a data set containing mental health in jail data. every observation
+corresponds to an interview conducted with an inmate. The data set is available
+in the file : "smp2.csv"
+\subsection*{Question 5}
+\label{sec:orgb334e8c}
+How many inmates are employees ?
+\begin{itemize}
+\item 31
+\item 58
+\item 90
+\item 222
+\end{itemize}
+\subsection*{Question 6}
+\label{sec:org06983ae}
+Run an OLS regressions to estimate the model log(dur.interv)= a + b*log(age) + bruit. What is the estimated
+value of the coeﬃcient b ? (dur.interv represents the interview duration)
+\begin{itemize}
+\item -1.712
+\item 0.02
+\item 0.13
+\item 2.35
+\end{itemize}
+\end{document}

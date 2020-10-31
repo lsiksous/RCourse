@@ -1,0 +1,67 @@
+#+TITLE: Exam R I
+#+OPTIONS: toc:nil num:nil
+#+PROPERTY: header-args  :session :exports both
+* Description
+The exam will take the form of MCQs. There will be 3 types of questions.
+•questions about R and programming (5p)
+•questions about understanding of R scripts (10p)
+•questions asking you to use R in order to make calculations (5p)
+
+<TBD>
+... In addition, there will be a bonus of 1 or 2 points for the prediction.
+Solutions with a predictionR2between 0.7 and 0.85 will get one additional
+point. Solutions with a prediction R2 larger than 0.85 will get two additional
+points.
+<TBD>
+
+* Questions about R
+** Question 1
+The function factor() takes as an argument:
+- a sortable vector of character type  
+- a boolean
+- a matrix
+- any vector
+** Question 2
+The function summary()
+- list the environement object and values
+- takes no argument
+- prints statistics of a data frame
+- invokes methods of the class of its first argument
+* Questions about interpretations of R code  
+** Question 3
+What does this code do ?
+#+begin_src r
+plot(cars$model,cars$price)
+#+end_src
+- it creates a graph of two vectors
+- it creates and display a graph of two variables
+- it print two columns of a data set
+- it creates a frequency table of variables
+** Question 4
+Which command would return the same value as the following chunk
+#+begin_src r 
+range(cars$price)
+#+end_src
+- c(min(cars$price),max(cars$price))
+- cars[pmin($price)][pmax(cars$price)]
+- cars[which.min(cars$price),"price"] + cars[which.max(cars$price),"price"]
+- seq(min(cars$price),max(cars$price))
+* Questions about production of R code
+We use a data set containing mental health in jail data. every observation
+corresponds to an interview conducted with an inmate. The data set is available
+in the file : "smp2.csv"
+** Question 5
+How many inmates are employees ?
+- 31
+- 58
+- 90
+- 222
+** Question 6
+Run an OLS regressions to estimate the model log(dur.interv)= a + b*log(age) + bruit. What is the estimated
+value of the coeﬃcient b ? (dur.interv represents the interview duration)
+- -1.712
+- 0.02
+- 0.13
+- 2.35
+
+
