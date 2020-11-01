@@ -3,3 +3,6 @@ auto/
 .R*
 .*.el
 .projectile
+.Rproj.user
+*.Rproj
+.*.org
