@@ -1,0 +1,521 @@
+% Created 2020-11-02 Mon 20:06
+% Intended LaTeX compiler: pdflatex
+\documentclass[11pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{graphicx}
+\usepackage{grffile}
+\usepackage{longtable}
+\usepackage{wrapfig}
+\usepackage{rotating}
+\usepackage[normalem]{ulem}
+\usepackage{amsmath}
+\usepackage{textcomp}
+\usepackage{amssymb}
+\usepackage{capt-of}
+\usepackage{hyperref}
+\author{Laurent Siksous}
+\date{\today}
+\title{White Exam R I}
+\hypersetup{
+ pdfauthor={Laurent Siksous},
+ pdftitle={White Exam R I},
+ pdfkeywords={},
+ pdfsubject={},
+ pdfcreator={Emacs 27.1 (Org mode 9.4)}, 
+ pdflang={English}}
+\begin{document}
+
+\maketitle
+
+\section*{Description}
+\label{sec:org87793da}
+The exam will take the form of MCQs. There will be 3 types of questions.
+
+\begin{itemize}
+\item questions about R and programming (5p)
+
+\item questions about understanding of R scripts (10p)
+
+\item questions asking you to use R in order to make calculations (5p)
+\end{itemize}
+
+\section*{Questions about R}
+\label{sec:orge5bf8c8}
+\subsection*{Question 1}
+\label{sec:org2191168}
+Which of the following objects are not a data type of R ?
+
+\begin{itemize}
+\item A) Vectors and matrices
+
+\item B) Lists and arrays
+
+\item C) Factors
+
+\item D) Functions
+\end{itemize}
+
+\subsection*{Question 2}
+\label{sec:org1b74db9}
+R functionality is divided into a number of what ?
+
+\begin{itemize}
+\item A) Packages
+
+\item B) Domains
+
+\item C) Classes
+
+\item D) All of the above
+\end{itemize}
+
+\subsection*{Question 3}
+\label{sec:org50584af}
+The \uline{\uline{\uline{\uline{\uline{\_\_}}}}} in R is a vector.
+
+\begin{itemize}
+\item A) Basic data structure
+
+\item B) Advance data structure
+
+\item C) Basic data types
+
+\item D) None of the Above
+\end{itemize}
+
+\subsection*{Question 4}
+\label{sec:org9c9848f}
+To view a list of preloaded datasets in R, which command do you type into the console ?
+
+\begin{itemize}
+\item A) trace()
+
+\item B) data()
+
+\item C) library()
+
+\item B) summary()
+\end{itemize}
+
+\subsection*{Question 5}
+\label{sec:org17321d5}
+“dplyr” is one of the most popular package used in R for manipulating data and
+it contains 5 core functions to handle data. Which of the following is not one
+of the core functions of dplyr package?
+
+\begin{itemize}
+\item A) select()
+
+\item B) filter()
+
+\item C) arrange()
+
+\item D) summary()
+\end{itemize}
+
+\section*{Questions about interpretations of R code}
+\label{sec:orgd496495}
+\subsection*{Question 6}
+\label{sec:orgcf25e65}
+Which of the following command will remove an R object / variable named “santa” from the workspace?
+
+\begin{itemize}
+\item A) remove(santa)
+
+\item B) rm(santa)
+
+\item C) Both
+
+\item D) None
+\end{itemize}
+
+\subsection*{Question 7}
+\label{sec:orgecd2662}
+
+\begin{center}
+\begin{tabular}{lrl}
+A & 10 & Sam\\
+B & 20 & Peter\\
+C & 30 & Harry\\
+D & ! & ?\\
+E & 50 & Mark\\
+\end{tabular}
+\end{center}
+
+Missing values in this csv file has been represented by an exclamation mark
+(“!”) and a question mark (“?”). Which of the codes below will read the above
+csv file correctly into R ?
+
+\begin{itemize}
+\item A) csv(‘Dataframe.csv’)
+
+\item B) csv(‘Dataframe.csv’,header=FALSE, sep=’,’,na.strings=c(‘?’))
+
+\item C) csv2(‘Dataframe.csv’,header=FALSE,sep=’,’,na.strings=c(‘?’,’!’))
+
+\item D) dataframe(‘Dataframe.csv’)
+\end{itemize}
+
+\subsection*{Question 8}
+\label{sec:orgc3d6875}
+
+\begin{center}
+\begin{tabular}{rl}
+A & B\\
+\hline
+1 & Right\\
+2 & Wrong\\
+3 & Wrong\\
+4 & Right\\
+5 & Right\\
+6 & Wrong\\
+7 & Wrong\\
+8 & Right\\
+\end{tabular}
+\end{center}
+
+Suppose B is a categorical variable and we wish to draw a boxplot for every
+level of the categorical level. Which of the below commands will help us achieve
+that?
+
+\begin{itemize}
+\item A) boxplot(A,B,data=data)
+
+\item B) boxplot(A\textasciitilde{}B,data=data)
+
+\item C) boxplot(A|B,data=data)
+
+\item D) None of the above
+\end{itemize}
+
+\subsection*{Question 9}
+\label{sec:org2da4805}
+Consider the following function:
+\begin{verbatim}
+f <- function(x) {
+      g <- function(y) {
+             y + z
+      }
+
+      z <- 4
+      x + g(x)
+}
+\end{verbatim}
+
+If we execute following commands (written below), what would be the output ?
+
+\begin{verbatim}
+z <- 10
+f(4)
+\end{verbatim}
+
+\begin{itemize}
+\item A) 12
+
+\item B) 7
+
+\item C) 4
+
+\item D) 16
+\end{itemize}
+
+\subsection*{Question 10}
+\label{sec:org6dd2521}
+What will be the output of following commands?
+
+\begin{verbatim}
+A <- paste(“alpha”,”beta”,”gamma”,sep=” ”)
+B <- paste(“phi”,”theta”,”zeta”,sep=””)
+parts <- strsplit(c(A,B),split=” ”)
+parts[[1]][2]
+\end{verbatim}
+
+A) alpha
+
+B) beta
+
+C) gamma
+
+D) phi
+
+\subsection*{Question 11}
+\label{sec:org3529163}
+One of the important phase in a Data Analytics pipeline is univariate analysis
+of the features which includes checking for the missing values and the
+distribution, etc. we wish to plot histogram for “age”
+variable. Which of the following commands will help us perform that task ? 
+
+\begin{itemize}
+\item A) hist(data\$age)
+
+\item B) ggplot2::qplot(data\$age,geom=”Histogram”)
+
+\item C) ggplot2::ggplot(data=data,aes(data\$age))+geom\textsubscript{histogram}()
+
+\item D) All of the above
+\end{itemize}
+
+\subsection*{Question 12}
+\label{sec:orgf2a9889}
+Which of the following command will help us to rename the second column in a dataframe named “table” from alpha to beta?
+
+\begin{itemize}
+\item A) colnames(table)[2]=’beta’
+
+\item B) colnames(table)[which(colnames==’alpha’)]=’beta’
+
+\item C) setnames(table,’alpha’,’beta’)
+
+\item D) All of the above
+\end{itemize}
+
+\subsection*{Question 13}
+\label{sec:org93f8996}
+We wish to calculate the correlation between “Column2” and “Column3” of a
+“dataframe”. Which of the below codes will achieve the purpose ?
+
+\begin{itemize}
+\item A) corr(dataframe\$column2,dataframe\$column3)
+
+\item B)
+\end{itemize}
+
+(cov(dataframe\$column2,dataframe\$column3))/
+
+(var(dataframe\$column2)*sd(dataframe\$column3))
+
+\begin{itemize}
+\item C)
+\end{itemize}
+
+(sum(dataframe\$Column2*dataframe\$Column3)-
+
+(sum(dataframe\$Column2)*sum(dataframe\$Column3)/nrow(dataframe)))/
+
+(sqrt((sum(dataframe\$Column2*dataframe\$Column2)-
+
+(sum(dataframe\$Column2)\textsuperscript{3})/nrow(dataframe))*
+
+(sum(dataframe\$Column3*dataframe\$Column3)-
+
+(sum(dataframe\$Column3)\textsuperscript{2})/nrow(dataframe))))
+
+\begin{itemize}
+\item D) None of the Above
+\end{itemize}
+
+\subsection*{Question 14}
+\label{sec:org22dcc57}
+Which of the following commands will split the plotting window into 4 X 3
+windows and where the plots enter the window column wise ?
+
+\begin{itemize}
+\item A) par(split=c(4,3))
+
+\item B) par(mfcol=c(4,3))
+
+\item C) par(mfrow=c(4,3))
+
+\item D) par(col=c(4,3))
+\end{itemize}
+
+\subsection*{Question 15}
+\label{sec:org0ae011d}
+A Dataframe “df” has the following data:
+
+\begin{center}
+\begin{tabular}{r}
+2017-02-28\\
+2017-02-27\\
+\ldots{}\\
+\end{tabular}
+\end{center}
+
+After reading above data, we want the following output:
+
+\begin{center}
+\begin{tabular}{l}
+28 Tuesday Feb 17\\
+27 Monday Feb 17\\
+\end{tabular}
+\end{center}
+
+Which of the following commands will produce the desired output?
+
+\begin{itemize}
+\item A) format(df,”\%d \%A \%b \%y”)
+
+\item B) format(df,”\%D \%A \%b \%y”)
+
+\item C) format(df,”\%D \%a \%B \%Y”)
+
+\item D) None of above
+\end{itemize}
+
+\section*{Questions about production of R code}
+\label{sec:org4209553}
+We use a data set containing data regarding mental health in prison. Every
+observation corresponds to an interview conducted with an inmate. The data set
+is available in the file : "smp2.csv".
+
+\subsection*{Explications des features de ce dataset}
+\label{sec:org7adcca7}
+
+\begin{itemize}
+\item l‘âge, age
+
+\item la profession, prof
+
+\item la durée de la peine, quand elle a été prononcée, duree
+
+\item est-ce que le détenu est sous mesure disciplinaire, discip
+
+\item le nombre d'enfants, n.enfant
+
+\item la taille de la fratrie, n.fratrie
+
+\item la variable relative à la scolarisation du détenu qui va de 1 à 5, ecole
+
+\item Est-ce que le détenu a été séparé de sa famille quand il était enfant oui/non,
+separation
+
+\item Est-ce qu'il a bénéficié de l'aide d’un juge pour enfants quand il était
+enfant, juge.enfant
+
+\item Est-ce qu'il a été placé, place
+
+\item Est-ce qu'il a été victime d'abus, abus
+
+\item la gravité consensuelle, grav.cons
+\end{itemize}
+
+Nous retrouvons ensuite les variables diagnostiques,
+\begin{itemize}
+\item l'existence d'une dépression par le consensus du clinicien, dep.cons
+
+\item un trouble agoraphobique, ago.cons
+
+\item le syndrôme de stress post-traumatique, ptsd.cons
+\end{itemize}
+
+L'existence
+\begin{itemize}
+\item d'un abus d'alcool, alc.cons
+
+\item d'un abus de substances, subst.cons
+
+\item d'une schizophrénie, scs.cons
+\end{itemize}
+
+Ensuite nous avons,
+\begin{itemize}
+\item la variable char qui correspond à un score semi-quantitatif qui évalue
+l'importance, l'intensité d'un trouble de la personnalité sous-jacent, char
+\end{itemize}
+
+Nous retrouvons les trois dimensions de personnalité
+\begin{itemize}
+\item recherche de sensation, rs
+
+\item évitement du danger, ed
+
+\item dépendance à la récompense, dr
+\end{itemize}
+
+Puis trois variables relatives au risque suicidaire,
+\begin{itemize}
+\item d'abord un score de risque suicidaire, suicide.s
+
+\item ensuite l'existence d'un haut risque suicidaire, c'est une binarisation de la variable score suicidaire, suicide.hr
+
+\item et enfin l'existence d'antécédents de tentative de suicide, suicide.past
+\end{itemize}
+
+Et puis, comme dernière variable nous avons
+\begin{itemize}
+\item la durée de l'entretien que les enquêteurs ont passée avec le détenu, dur.interv
+\end{itemize}
+
+\subsection*{Question 16}
+\label{sec:orgdf0ff8f}
+How many inmates have more than 3 children ?
+\begin{verbatim}
+plot(smp.c$age,smp.c$n.enfant)
+\end{verbatim}
+
+\begin{center}
+\includegraphics[width=.9\linewidth]{/var/folders/lr/51tf4dc1371fb0bcvf3f1gcc0000gp/T/babel-M4doX5/.figureI9Lc1t.png}
+\end{center}
+
+\begin{itemize}
+\item A) 222
+
+\item B) 55
+
+\item C) 113
+
+\item D) 660
+\end{itemize}
+
+\subsection*{Question 17}
+\label{sec:org01bec1f}
+Estimate the correlation coefficient between the age and the number of children
+of detainees ?
+\begin{itemize}
+\item A) 0.87
+
+\item B) 0.43
+
+\item C) -0.65
+
+\item D) 0.14
+\end{itemize}
+
+\subsection*{Question 18}
+\label{sec:org525b15a}
+Is there a significant correlation between age and sensation research ? Use a
+test to show if an older detainee has a lower score of sensation research. What
+is the lower end of confidence interval for this test ?
+\begin{itemize}
+\item A) -0.15
+
+\item B) 0.22
+
+\item C) -0.29
+
+\item D) No significant correlation
+\end{itemize}
+
+\subsection*{Question 19}
+\label{sec:org7ea0168}
+We wish to verify if the interview duration varies whether the detainees have
+already tried to kill themselves or not, with the help of a Wilcoxon test. What
+is the degree of significance ?
+
+\begin{itemize}
+\item A) p ‹ 0.10
+
+\item B) p ‹ 0.05
+
+\item C) p ‹ 0.01
+
+\item D) p ‹ 0.001
+\end{itemize}
+
+\subsection*{Question 20}
+\label{sec:orgdf6ddc9}
+We'd like to predict how the interview duration varies considering several
+factors maybe interdependant. To do that, we build a multiple linar regression
+model on 4 traits : age, depression, drugs addiction and
+schizophrenia. How many minutes should we add or substract to the duration
+interview for a detainee with schizophrenia compared to an other ? (regardless of
+her age, state of depression or drug consumption)
+
+\begin{itemize}
+\item A) 2
+\item B) 7
+\item C) 5
+\item D) I don't know
+\end{itemize}
+\end{document}
