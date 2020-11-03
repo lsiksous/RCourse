@@ -1,0 +1,358 @@
+% Created 2020-11-03 Tue 17:53
+% Intended LaTeX compiler: pdflatex
+\documentclass[11pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{graphicx}
+\usepackage{grffile}
+\usepackage{longtable}
+\usepackage{wrapfig}
+\usepackage{rotating}
+\usepackage[normalem]{ulem}
+\usepackage{amsmath}
+\usepackage{textcomp}
+\usepackage{amssymb}
+\usepackage{capt-of}
+\usepackage{hyperref}
+\author{Laurent Siksous}
+\date{\today}
+\title{White Exam R II}
+\hypersetup{
+ pdfauthor={Laurent Siksous},
+ pdftitle={White Exam R II},
+ pdfkeywords={},
+ pdfsubject={},
+ pdfcreator={Emacs 27.1 (Org mode 9.4)}, 
+ pdflang={English}}
+\begin{document}
+
+\maketitle
+
+\section*{Description}
+\label{sec:orga4a4939}
+The exam will take the form of MCQs. There will be 3 types of questions.
+
+\begin{itemize}
+\item questions about R and programming (5p)
+
+\item questions about understanding of R scripts (10p)
+
+\item questions asking you to use R in order to make calculations (5p)
+\end{itemize}
+
+\section*{Questions about R}
+\label{sec:org1857021}
+\subsection*{Question 1}
+\label{sec:org1591f8f}
+How missing values and impossible values are represented in R language?
+
+a) NA
+
+b) NAN
+
+c) NA \& NAN
+
+d) Not Exist
+
+\subsection*{Question 2}
+\label{sec:orgdd1754a}
+What is the best way for communicating the results of data analysis using the R language.
+
+a) Single document
+
+b) Files
+
+c) Structures
+
+d) Loadings
+
+\subsection*{Question 3}
+\label{sec:org1e9d88f}
+The tapply() function takes 3 main arguments. What is the second ?
+
+\begin{itemize}
+\item A) The numeric variable to be resumed
+
+\item B) The classification factor
+
+\item C) The R command to use
+
+\item D) A function to be applied
+\end{itemize}
+
+\subsection*{Question 4}
+\label{sec:org9a90e19}
+You can check to see whether an R object is NULL with the function :
+
+\begin{itemize}
+\item a) is.null()
+
+\item b) is.nullobj()
+
+\item c) null()
+
+\item d) as.nullobj()
+\end{itemize}
+
+\subsection*{Question 5}
+\label{sec:org962af81}
+If you want to save a plot to a PDF file, which of the following is a correct way of doing that?
+
+A) Construct the plot on the screen device and then copy it to a PDF file with dev.copy2pdf().
+
+B) Construct the plot on the PNG device with png(), then copy it to a PDF with dev.copy2pdf().
+
+C) Open the PostScript device with postscript(), construct the plot, then close the device with dev.off().
+
+D) Open the screen device with quartz(), construct the plot, and then close the
+device with dev.off().
+
+\subsection*{Question 6}
+\label{sec:orgd5be9f0}
+Which of the following is not an object of R?
+
+a) calls
+
+b) expressions
+
+c) strings
+
+d) names
+
+\subsection*{Question 7}
+\label{sec:org28e303a}
+What is the meaning of “<-“?
+
+a) Functions
+
+b) Loops
+
+c) Addition
+
+d) Assignment
+
+\subsection*{Question 8}
+\label{sec:orgcea9f26}
+Which of the following can be used to display the names of (most of) the objects which are currently stored within R?
+
+a) object()
+
+b) objects()
+
+c) list()
+
+d) class()
+
+\subsection*{Question 9}
+\label{sec:org023b905}
+Which of the following truncates real x to integers ?
+
+\begin{itemize}
+\item A) as.numeric(x)
+
+\item B) as.integer(x)
+
+\item C) as.order(x)
+
+\item D) All of the above
+\end{itemize}
+
+\subsection*{Question 10}
+\label{sec:orgcdb798c}
+Point out the correct statement :
+
+\begin{itemize}
+\item A) The value NaN represents undefined value
+
+\item B) Number Inf represents infinity in R
+
+\item C) NaN can also be thought of as a missing value
+
+\item D) None of the above
+\end{itemize}
+
+\section*{Questions about interpretations of R code}
+\label{sec:org2d54452}
+\subsection*{Question 11}
+\label{sec:org79824cf}
+Suppose there are 2 dataframes “A” and “B”. A has 34 rows and B has 46
+rows. What will be the number of rows in the resultant dataframe after running
+the following command?
+\begin{itemize}
+\item A) 46
+
+\item B) 12
+
+\item C) 34
+
+\item D) 80
+\end{itemize}
+
+\subsection*{Question 12}
+\label{sec:org9e0ce01}
+To display the variable X distribution by the levels of a factor z (the two are
+stored in a dataframe d), what command do we use ?:
+
+\begin{itemize}
+\item A) boxplot(d[,c(x, z)])
+
+\item B) boxplot(d\$z, d\$x)
+
+\item C) boxplot(x \textasciitilde{} z, data=d)
+
+\item D) boxplot(z \textasciitilde{} x, data=d)
+\end{itemize}
+
+\subsection*{Question 13}
+\label{sec:org4ce2fa4}
+What will be the output of the following R code snippet?
+
+\begin{verbatim}
+f <- function(num = 1) {
+        hello <- "Hello, world!\n"
+        for(i in seq_len(num)) {
+                cat(hello)
+         }
+         chars <- nchar(hello) * num
+         chars
+}
+
+f()
+\end{verbatim}
+
+\begin{verbatim}
+Hello, world!
+[1] 14
+\end{verbatim}
+
+
+a)
+
+Hello, world!
+[1] 14
+b)
+
+Hello, world!
+[1] 15
+c)
+
+Hello, world!
+[1] 16
+
+d) Error
+
+\subsection*{Question 14}
+\label{sec:org80ff277}
+A dataset has been read in R and stored in a variable “dataframe”. Missing values have been read as NA.
+
+\begin{center}
+\begin{tabular}{lrl}
+A & 10 & Sam\\
+B & NA & Peter\\
+C & 30 & Harry\\
+D & 40 & NA\\
+E & 50 & Mark\\
+\end{tabular}
+\end{center}
+
+Which of the following codes will not give the number of missing values in each column?
+
+A) colSums(is.na(dataframe))
+
+B) apply(is.na(dataframe),2,sum)
+
+C) sapply(dataframe,function(x) sum(is.na(x))
+
+D) table(is.na(dataframe))
+
+\subsection*{Question 15}
+\label{sec:orgf3ae54f}
+Which of the following statement changes column name to h and f ?
+
+A. colnames(m) <- c("h", "f")
+
+B. columnnames(m) <- c("h", "f")
+
+C. rownames(m) <- c("h", "f")
+
+D. None of the above
+
+\subsection*{Question 16}
+\label{sec:orgf3b0655}
+Which of the following code will sort the dataframe based on “Column2” in ascending order and “Column3” in descending order?
+
+\begin{itemize}
+\item A) dplyr::arrange(table,desc(Column3),Column2)
+
+\item B) table[order(-Column3,Column2),]
+
+\item C) Both of the above
+
+\item D) None of the above
+\end{itemize}
+
+\subsection*{Question 17}
+\label{sec:orgdebc896}
+If I have two vectors x<- c(1,3, 5) and y<-c(3, 2), what is produced by the expression cbind(x, y)?
+
+\begin{itemize}
+\item A) a matrix with 2 columns and 3 rows
+
+\item B) a matrix with 3 columns and 2 rows
+
+\item C) a data frame with 2 columns and 3 rows
+
+\item D) a data frame with 3 columns and 2 rows
+\end{itemize}
+
+\section*{Questions about production of R code}
+\label{sec:org0189a17}
+You will find in data/ directory a file called hills.txt.  This file contains
+the Scottish hill races
+(\url{https://dasl.datadescription.com/datafile/scottish-hill-races/}) You will work
+from now on on this data set and on a computational document that you will save
+as a pdf file and deliver at the end of the next 5 questions.
+
+\subsection*{Question R1}
+\label{sec:orgd01fe07}
+How many hills of 2000 meters or more do we have ?
+Create a new column that will code 1 if true and 0 otherwise. 
+\begin{itemize}
+\item A) 12
+
+\item B) 14
+
+\item C) 21
+
+\item D) 23
+\end{itemize}
+
+\subsection*{Question R2}
+\label{sec:orgff8fa9e}
+Compute a linear regression of time against distance. What is a good estimation
+of the average speed of racers?
+\begin{itemize}
+\item A) 4
+
+\item B) 6
+
+\item C) 7
+
+\item D) 8
+\end{itemize}
+
+\subsection*{Question R3}
+\label{sec:orgc900c75}
+Create a scatter plot of time against distance. Rename the x and why axis nicely
+and give title to your graph. Is there a correlation between these two features
+? Add the line of regression to the graph.
+\subsection*{Question R4}
+\label{sec:orgbfafeff}
+Create 2 box plots in the same graph for distance by the the two categories of hills (inferior or
+superior 2000 meters).
+\subsection*{Question R5}
+\label{sec:org8a3c198}
+Present a t test of student to compare the distance of each group of hills
+(superior of inferior 2000 meters). Is it significant ? What is the difference
+of means between the two groups ?
+\end{document}

@@ -376,6 +376,12 @@ table(smp.c$n.enfant <= 3)
 : FALSE  TRUE 
 :   113   660
 
+
+
+#+begin_src R :results output graphics file :file (org-babel-temp-file ".figure" ".png") :exports both :width 600 :height 400 :session *R*
+plot(smp.c$age,smp.c$n.enfant)
+#+end_src
+
 - A) 222
 
 - B) 55
